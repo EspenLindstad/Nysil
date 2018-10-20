@@ -1,0 +1,129 @@
+{% extends 'my_subjects/subject_header.html' %}
+{% block extension %}
+    <!-- Page content -->
+          <!-- code for the video on th page -->
+        <div class="col-sm-6">
+            <div class="embed-responsive embed-responsive-16by9">
+
+                 <!-- Plays youtube on the webpage and uses the youtube-id. allowsfuulscreen allows youtube to play in fullscreen -->
+                <iframe class="embed-responsive-item" src="http://www.youtube.com/embed/{{exercise.youtube_id}}" allowfullscreen="allowfullscreen"></iframe>
+            </div>
+            <div style="width:100%">
+                <form method="POST" action=""> {% csrf_token %}
+                    <div style="float: left; width:30%">
+                        <br> <h6>Comments: </h6>
+                    </div>
+                    <div style="float: right; width:18%">
+                        <br>
+                        <input class="btn btn-xs btn-primary" type="submit" value="Submit comment"/>
+                    </div>
+                    {{ comment_form.text }}
+                </form>
+            </div>
+        </div>
+
+
+        <!-- Exercise-buttons, with popup for each one of them -->
+        <div class="col-md-4">
+
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#LettOppgave" id="easyTask">Easy exercise</button>
+            <!-- shows if you have answered correct to easy_question before -->
+            {{ info_easy }}
+            <form role="form" method="POST"> {% csrf_token %} <!-- says that the page is safe-->
+            <div class="modal fade" id="LettOppgave">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times</button>
+                            <h4 class="modal-title">Easy exercise</h4>
+                        </div>
+                            <div class="modal-body">
+                                <div class="form group">
+                                    <p>{{ exercise.easy_question }}?</p>
+                                </div>
+                                {{ form.as_p }}
+                                </div>
+                            <div class="modal-footer">
+                            <button class="btn btn-primary btn-block" name="easy" type="submit">Check answer</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+        <div class="col-md-4">
+            <br>
+
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#MiddelsOppgave">Medium exercise</button>
+            <!-- shows if you have answered correct to medium_question before -->
+            {{ info_medium }}
+            <form role="form" method="POST"> {% csrf_token %} <!-- says that the page is safe-->
+            <div class="modal fade" id="MiddelsOppgave">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times</button>
+                            <h4 class="modal-title">Medium exercise</h4>
+                        </div>
+
+                            <div class="modal-body">
+                                <div class="form group">
+                                    <p> {{ exercise.medium_question }}</p>
+                                </div>
+                                {{ form.as_p }}
+                            </div>
+
+                            <div class="modal-footer">
+                            <button class="btn btn-primary btn-block" name="medium">Check answer</button>
+                        </div>
+
+                        </div>
+                    </div>
+
+                </div>
+             </form>
+        </div>
+
+
+
+
+        <div class="col-md-4">
+            <br>
+
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#VanskeligOppgave">Hard exercise</button>
+            <!-- shows if you have answered correct to hard_question before -->
+            {{ info_hard }}
+            <form role="form" method="POST"> {% csrf_token %} <!-- says that the page is safe-->
+            <div class="modal fade" id="VanskeligOppgave">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times</button>
+                            <h4 class="modal-title">Hard exercise</h4>
+                        </div>
+
+                            <div class="modal-body">
+                                <div class="form group">
+                                    <p>{{ exercise.hard_question }}</p>
+                                </div>
+                                {{ form.as_p }}
+                            </div>
+                            <div class="modal-footer">
+                            <button class="btn btn-primary btn-block" name="hard">Check answer</button>
+                        </div>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+            {% block extra %}
+            {% endblock %}
+
+        </div>
+{% endblock %}

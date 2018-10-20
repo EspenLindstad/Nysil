@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>NYSIL</title>
+	<meta charset="utf-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'main/css/customize.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'my_subjects/css/customize.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'progress/css/customize.css' %}" type="text/css">
+    <link rel="shortcut icon" href="{% static 'adminpage/img/n_favicon.png' %}" type="image/x-icon" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+	<!-- Latest compiled and minified CSS --><!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+	crossorigin="anonymous">
+
+
+	 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	crossorigin="anonymous"></script>
+
+	<meta name="viewport" content = "width=device-width, initial-scale=1.0">
+
+
+    <link rel="stylesheet" href="{% static 'main/css/header.css'%}" type = "text/css"/>
+
+</head>
+<!-- Layout til bakgrunnen til nettsiden -->
+    <body class="body" style="background-color: #E5E4E2;    ">
+
+<div id="wrapper">
+
+
+        <!-- Navbar -->
+        <br>
+	<br>
+	<br>
+        <nav class="navbar navbar-inverse navbar-fixed-top" >
+            <div class="container-fluid">
+
+                <!-- makes navbar to dropdown when the page gets to small
+                 + button which takes you to the frontpage -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mainNavBar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+				    </button>
+                    <a href="{% url 'main:index' %}" class="navbar-brand"><img src="{% static 'main/img/ny_logo.png'%}" style="width:100px;height:27px;margin-top:-4px;margin-left:-3px"></a>
+                </div>
+
+                <!-- Navbar items -->
+                <div class="collapse navbar-collapse" id="mainNavBar">
+                    <ul class="nav navbar-nav">
+
+                        <!-- Dropdown for "my subjects " -->
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">My Subjects
+                                <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <!-- adds all the student subjects to "My Subjects"-dropown -->
+                                {% for subject in user.userprofile.subjects.all %}
+                                    <li><a href="{% url 'my_subjects:subject_view' subject.pk %}"> {{ subject.subject_code }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <!-- makes the search-field a login-button if the user is not logged in -->
+                        {% if not user.is_authenticated %}
+                            <li><a href="{% url 'main:login_user' %}">Please log in</a></li>
+                        {% else %}
+                        <li style="margin-top: 8px">
+
+                            <input id="search-input"  type="text" class="form-control" placeholder="Add subject ..."/>
+                            <div id="main-results-search"></div>
+
+                        </li>
+                        {% endif %}
+
+                    </ul>
+
+                    <!-- button for login -->
+                    <ul class="nav navbar-nav navbar-right">
+                        <!-- Makes the progress-button only visible if the user is logged in -->
+                        {% if not user.is_authenticated %}
+                        {% else %}
+
+                        <li><a href="{% url 'progress:my_progress' %}"><span class="glyphicon glyphicon-list-alt"></span> Progress</a></li>
+                        {% endif %}
+                        {% if not user.is_authenticated %}
+                            <li><a href="{% url 'main:login_user' %}">Login</a></li>
+                        <!-- Only staff can access the Adminpage, checks this-->
+                        {% elif user.is_staff is True %}
+                            <li><a href="{% url 'adminpage:admin_index' %}">Adminpage</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, Prof. {{user}}
+                                    <span class="glyphicon glyphicon-option-vertical" style="width:2px;height:2px"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{% url 'main:logout_user' %}">Logout</a></li>
+                                </ul>
+                            </li>
+                        {% elif user.is_staff is False %}
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{user}}
+                                    <span class="glyphicon glyphicon-option-vertical" style="width:2px;height:2px"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{% url 'main:logout_user' %}">Logout</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                    </ul>
+
+
+
+
+                </div>
+
+            </div>
+        </nav>
+    <!-- Code for our Home-page with information about NYSIL -->
+        {% block content %}
+            <div class="row" style="padding-top: 40px">
+              <div class="col-md-2"></div>
+              <div class="col-md-2"></div>
+              <div class="col-md-2"></div>
+              <div class="col-md-2"></div>
+              <div class="col-md-2"></div>
+              <div class="col-md-2"></div>
+            </div>
+            <div class="row" style="padding-top: 10px">
+              <div class="col-md-3"></div>
+              <div class="col-sm-6">
+                        <div class="embed-responsive embed-responsive-16by9" style="height: 360px">
+
+                             <!-- Plays youtube on the webpage and uses the youtube-id. "allowsfuulscreen" allows youtube to play in fullscreen -->
+                            <iframe style="border:10px solid #000; border-radius: 20px !important;" class="embed-responsive-item" src="http://www.youtube.com/embed/WOb_l5Ms9oE" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+                        </div>
+                    </div>
+              <div class="col-md-1" style="margin-left: 40px">
+              </div>
+              <div class="col-md-2">
+              </div>
+            </div>
+
+            <div class="row" style="padding-top: 40px">
+              <div class="col-md-12" style="text-align: center; font-size: 40px;">
+              Some of our subjects:</div>
+            </div>
+            <div class="row" style="padding-top: 40px">
+              <div class="col-md-3"></div>
+              <div class="col-md-3">
+                <div class="panel panel-default" style="border-radius: 46px; height: 92px; background-color: #0094D0">
+                    <img src="{% static 'main/img/calculator.png'%}" style="width: 90px; height: 90px">
+                    Maths
+                    <div class="panel-body"></div>
+                </div>
+                <br>
+                <div class="panel panel-default" style="border-radius: 46px; height: 92px; background-color: #0094D0";>
+                    <img src="{% static 'main/img/graphs.png'%}" style="width: 90px; height: 90px">
+                    Statistics
+                    <div class="panel-body"></div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="panel panel-default" style="border-radius: 46px; height: 92px; background-color: #0094D0">
+                    <img src="{% static 'main/img/vessel.png'%}" style="width: 90px; height: 90px">
+                    Chemistry
+                    <div class="panel-body"></div>
+                </div>
+                <br>
+                <div class="panel panel-default" style="border-radius: 46px; height: 92px; background-color: #0094D0">
+                    <img src="{% static 'main/img/programming.png'%}" style="width: 90px; height: 90px">
+                    Programming
+                    <div class="panel-body"></div>
+                </div>
+              </div>
+              <div class="col-md-3"></div>
+            </div>
+            <div class="row" style="padding-top: 50px">
+                <div class="col-md-12" style="text-align: center; font-size: 40px" >
+                How to use NYSIL:
+                </div>
+            </div>
+            <div class="row" style="padding-top: 50px">
+              <div class="col-md-2"></div>
+              <div class="col-md-4">
+                <img src="{% static 'main/img/login.png'%}" style="width:400px;height:150px;">
+              </div>
+              <div class="col-md-4">
+                Start By Logging In:
+                <br>
+                  Before you can start using our awesome solution for online learning, you have to log in.
+                  This is so you can start customizing you profile and begin the exploration.
+              </div>
+              <div class="col-md-2"></div>
+            </div>
+            <div class="row" style="padding-top: 100px">
+              <div class="col-md-2"></div>
+              <div class="col-md-4">
+                Add Your Subjects:
+              <br>
+                  By adding the subjects to your list, you can easily access them. Use the search
+                  bar to find your subjects and add them to "My subjects" by clicking the '+' button.
+                  Now you will easily be able to locate your subject, and dig into this world of knowlage.
+              </div>
+              <div class="col-md-4">
+                <img src="{% static 'main/img/choose_subject.png'%}" style="width:400px;height:150px;">
+              </div>
+              <div class="col-md-2"></div>
+            </div>
+            <div class="row" style="padding-top: 100px">
+              <div class="col-md-2"></div>
+              <div class="col-md-4">
+                <img src="{% static 'main/img/navigate.png'%}" style="width:400px;height:150px;">
+              </div>
+              <div class="col-md-4">
+                Navigate to Your Desired Subtopic:
+                <br>
+                Start watching videos on the wanted subtopic by clicking into the chapter and
+                  then to the desired task. The videos are relatively short so you get a
+                  thorough view on the subtopic. After you have finished watching the video
+                  you can test yourself by doing tasks for the video. This will maximize
+                  your learning and assure you have understood the topic.
+              </div>
+              <div class="col-md-2"></div>
+            </div>
+        {% endblock%}
+</div>
+
+
+
+
+
+
+<footer id="footer">
+    <!-- script that makes it able to search for subjects in the database -->
+    <script>
+        // Implement realtime search with `keyup` function.
+        $('#search-input').keyup(function (event) {
+          var query =($('#search-input').val());
+          if (query != '' || query != ' ') {
+            $.ajax({
+               type: 'GET',
+               url: '{% url "main:search" %}',
+               data: {
+                 'csrfmiddlewaretoken': '{{ csrf_token }}',
+                 'q': query
+               },
+               success: function(data) {
+                  $('#main-results-search').html(data);
+               },
+               error: function(data) {
+                  console.log(data);
+               }
+             });
+          }
+        });
+        // Removing the element after search
+        // and when user clicked another/outside of this element below.
+        $(document).click(function(event) {
+          $is_inside = $(event.target).closest('#main-results-search').length;
+          if( event.target.id == 'search-input' || $is_inside ) {
+            return;
+          }else {
+            $('#results-search').remove();
+          }
+        });
+  </script>
+</footer>
+
+</body>

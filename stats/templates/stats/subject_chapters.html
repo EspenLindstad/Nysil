@@ -1,0 +1,24 @@
+{% extends 'stats/statistics_subject.html' %}
+
+
+
+{% block extra%}
+<div class="row">
+        <div class="col-md-2 sidebar" style="width:20%">
+          <ul class="nav nav-sidebar navbar-inverse">
+              <li class="active"><a href="#"><h4 style="color:grey">Chapters</h4><span class="sr-only">(current)</span></a></li>
+              <!-- a way to get all the chapter in the chosen subject -->
+                {% for chapter in subject.chapter_set.all %}
+                    <li><a style="color:grey" href="{% url 'stats:chapter_plot' chapter_pk=chapter.pk subject_pk=subject.pk %}"> {{ chapter }}</a></li>
+                {% endfor %}
+          </ul>
+        </div>
+    {% block graph %}
+        <div class="text-center">
+            <h3> Choose a chapter</h3>
+        </div>
+    {% endblock %}
+</div>
+
+{% endblock %}
+

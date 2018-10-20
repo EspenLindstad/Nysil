@@ -1,0 +1,39 @@
+{% extends 'adminpage/tilbakemeldinger.html' %}
+
+{% block extension %}
+
+<div class="col-md-10">
+    <div style ="width:90%">
+        <div style="float: left; width: 50%">
+            <h3> Chapter overview for {{ subject }} </h3>
+        </div>
+
+
+
+    </div>
+    <table class="table table-striped">
+        <!-- headlines to the columns in the table -->
+        <thead>
+            <tr>
+                <th>Chapter</th>
+                <th>Name</th>
+                <th>Feedback</th>
+            </tr>
+        </thead>
+
+        <!-- all the table-content -->
+        <tbody>
+            {% for chapter in subject.chapter_set.all %}
+                <tr>
+                    <th scope="row">{{ chapter.chapter_number }}</th>
+                    <td> {{ chapter.chapter_name }}</td>
+                    <td><div><a class="btn btn-xs btn-danger" href="{% url 'adminpage:chapter_feedback' subject_pk=subject.pk chapter_pk=chapter.pk %}">See Feedback</a></div></td>
+                </tr>
+            {% endfor%}
+
+        </tbody>
+
+    </table>
+
+</div>
+{% endblock%}

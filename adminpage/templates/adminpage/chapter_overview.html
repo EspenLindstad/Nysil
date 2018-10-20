@@ -1,0 +1,56 @@
+{% extends 'adminpage/subject_overview.html' %}
+
+{% block extension %}
+
+<div class="col-md-10">
+    <div style ="width:90%">
+        <div style="float: left; width: 50%">
+            <h3> Chapter overview for {{ subject }} </h3>
+        </div>
+
+        <div style="float: right; width: 0%">
+            <!-- wrapped the "add_chapter"-button inside a block because we want to give the button some new
+             functionality after it has been clicked -->
+            {% block chapter %}
+                <!-- Button that will send you to add_chapter-template -->
+                <div id="add_chapter">
+                    <a class="btn btn-large btn-success" href="{% url 'adminpage:new_chapter' subject_pk=subject.pk %}">New chapter</a>
+                </div>
+            {% endblock %}
+        </div>
+
+    </div>
+
+    <table class="table table-striped">
+        <!-- headlines to the columns in the table -->
+
+        <thead>
+            <tr>
+                <th>Chapter</th>
+                <th>Name</th>
+                <th>Contents</th>
+                <th>CHANGE</th>
+                <th>DELETE</th>
+            </tr>
+        </thead>
+
+        <!-- all the table-content -->
+        <tbody>
+            {% for chapter in subject.chapter_set.all %}
+                <tr>
+                    <th scope="row">{{ chapter.chapter_number }}</th>
+                    <th scope="row">{{ chapter.chapter_name }}</th>
+                    <td><div><a class="btn btn-xs btn-warning" href="{% url 'adminpage:exercise_overview' chapter_pk=chapter.pk subject_pk=subject.pk %}">Content</a></div></td>
+
+                    <td><div><a class="btn btn-xs btn-info" href="{% url 'adminpage:change_chapter' subject_pk=subject.pk chapter_pk=chapter.pk %}">CHANGE</a></div></td>
+                    <!-- this button shall delete the chapter and take us back to the same url -->
+                    <td><div><a class="btn btn-xs btn-danger" href="{% url 'adminpage:delete_chapter' subject_pk=subject.pk chapter_pk=chapter.pk %}">DELETE</a></div></td>
+                </tr>
+            {% endfor%}
+
+        </tbody>
+
+    </table>
+
+</div>
+{% endblock%}
